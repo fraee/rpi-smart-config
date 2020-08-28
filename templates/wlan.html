@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=320,maximum-scale=1.3,user-scalable=no">
+    <title>Wlan</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<style>
+    body{ text-align:center}
+    .wlan{
+        margin:0 auto
+    }
+</style>
+<body>
+<div class="wlan">
+    <p>请选择您的网络:</p>
+
+    <select id="wlan-list">
+        {% for sid in  ssid_arr %}
+            <option>{{ sid }}</option>
+        {% endfor %}
+    </select>
+    <p>请填写密码:</p>
+    <p><input type="text" value="" id="pass"/></p>
+    <p><input type="button" value="确定" id="submit"/></p>
+</div>
+{#<img src="/static/images/tree.jpeg" width="300" height="200">#}
+<script>
+    $("#wlan-list").on("change", function () {
+        console.log($("#wlan-list").val())
+    })
+    $("#submit").on("click", function () {
+        alert("配网成功!")
+        const ssid = $("#wlan-list").val();
+        const password = $("#pass").val()
+        if (ssid && password) {
+            $.ajax({
+                type: "POST",
+                url: "/connect",
+                data: {"ssid": ssid, "password": password},
+                success: function (result) {
+                    if (result == "OK") {
+                        console.log("OK")
+                    }
+                },
+                error: function (e) {
+                    console.error(e.responseText)
+                }
+            })
+        } else {
+            alert("请补全表单信息!")
+        }
+    })
+</script>
+</body>
+</html>
